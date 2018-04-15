@@ -5,7 +5,7 @@
 
 # parseSvgPathData
 
-<code>parseSvgPathData</code> is a javascript micro function for parsing the [path data attribute](https://developer.mozilla.org/en-US/docs/Web/SVG/Attribute/d) of the [SVG `<path>` element](https://developer.mozilla.org/en-US/docs/Web/SVG/Element/path).
+<code>parseSvgPathData</code> is a SVG path data micro-parser for parsing the [path data attribute](https://developer.mozilla.org/en-US/docs/Web/SVG/Attribute/d) of the [SVG `<path>` element](https://developer.mozilla.org/en-US/docs/Web/SVG/Element/path) as a single JavaScript function.
 
 ```js
 function parseSvgPathData(data,[ifc],[ctx])
@@ -16,13 +16,15 @@ function parseSvgPathData(data,[ifc],[ctx])
 * `ctx` is a context object the interface methods will operate on [optional].
 * `return`'s the context object.
 
-The fact that a user defined interface object is supported, was considered a critical feature. Similar libraries, which do not support this, are:
+![image](./parsesvgpathdata.gif)
+
+[Try it by yourself]()
+
+The fact that a user defined interface object should be supported, was considered a critical feature here. Similar libraries, which do not support this, are:
 
 * [parse-svg-path](https://github.com/jkroso/parse-svg-path) A minimal svg path parser 
 * [svg-path-parser](https://github.com/hughsk/svg-path-parser) A parser for SVG's path syntax
 * [svg-pathdata](https://github.com/nfroidure/svg-pathdata) Parse SVG PathDatas
-
-
 
 ## Interface Object
 
@@ -62,6 +64,7 @@ Interface objects need to have the following interface structure:
 * `parseSvgPathData.defaultIfc`
 * `parseSvgPathData.canvasIfc`
 
+Have a look into the source how these interface objects are implemented and start to implement your own custom interface object.
 
 ### `defaultIfc`
 
@@ -87,7 +90,7 @@ So parsing the path data `M37,17v15H14V17z M50,0H0v50h50z` using this interface 
 
 ### `canvasIfc`
 
-`canvasIfc` is another interface object, which is supplied with `parseSvgPathData`. Here every path command will invoke corresponding `HTML canvas 2D` functionality. The following will render the path data in a given canvas element:
+`canvasIfc` is another interface object, which is supplied with `parseSvgPathData`. Here every path command will invoke corresponding `HTML canvas 2D` methods. The following will render the path data in a given canvas element:
 
 ```js
 const ctx = document.getElementById('canvas').getContext('2d')
@@ -97,7 +100,7 @@ ctx.stroke()
 ctx.fill()
 ```
 
-You might know, that `CanvasRenderingContext2D` supports the `Path2D` interface. So we can also use it with `parseSvgPathData`
+You might know, that `CanvasRenderingContext2D` supports the [`Path2D` interface](https://developer.mozilla.org/en-US/docs/Web/API/Path2D). So we can also use it with `parseSvgPathData`
 
 ```js
 const path = new Path2D();

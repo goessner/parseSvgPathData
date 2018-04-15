@@ -18,6 +18,7 @@ function parseSvgPathData(data,ifc,ctx) {
                   z:{n:0} };
 
     const segment = (ifc,type,args) => {
+//console.log(args)
         if (type in seg) {
             if (args.length === seg[type].n) {
                 ifc[type](...args);
@@ -37,8 +38,9 @@ function parseSvgPathData(data,ifc,ctx) {
     ifc.init(ctx);
         // for each explicit named segment ...
     while (match = rex.exec(data)) {
-        segment(ifc, match[1], match[2].replace(/^\s+|\s+$/g,'')  // trim whitespace at both ends 
-                                       .split(/[, \t\n\r]+/g)     // ... use str.trim() in future
+        segment(ifc, match[1], match[2].replace(/^\s+|\s+$/g,'')  // trim whitespace at both ends (str.trim .. !)
+                                       .replace(/(\d)\-/g,'$1 -') // insert blank between digit and '-'
+                                       .split(/[, \t\n\r]+/g)     // as array
                                        .map(Number))
     }
     return ifc.ctx;
@@ -48,7 +50,7 @@ function parseSvgPathData(data,ifc,ctx) {
 parseSvgPathData.defaultIfc = {
     init() { this.x=this.x0=this.y=this.y0=this.ctx.length = 0; },
     A(rx,ry,rot,fA,fS,x,y) { this.ctx.push({type:'A',x:(this.x=x),y:(this.y=y),rx,ry,rot,fA,fS}) },
-    M(x,y) { this.ctx.push({type:'M',x:(this.x=this.x0=x),y:(this.y=this.y0=y)}) },
+    M(x,y) { this.ctx.push({type:'M',x:(this.x=this.x0=this.x1=this.x2=x),y:(this.y=this.y0=this.y1=this.y2=y)}) },
     L(x,y) { this.ctx.push({type:'L',x:(this.x=x),y:(this.y=y)}) },
     H(x) { this.ctx.push({type:'L',x:(this.x=x),y:this.y}) },
     V(y) { this.ctx.push({type:'L',x:this.x,y:(this.y=y)}) },
@@ -57,20 +59,20 @@ parseSvgPathData.defaultIfc = {
                                 x1:(this.x1=x1),y1:(this.y1=y1),
                                 x2:(this.x2=x2),y2:(this.y2=y2)});
     },
-    S(x2,y2,x,y) { 
+    S(x2,y2,x,y) {
         this.ctx.push({type:'C',x:(this.x=x),y:(this.y=y),
                                 x1:(this.x1=2*this.x-this.x2),y1:(this.y1=2*this.y-this.y2),
                                 x2:(this.x2=x2),y2:(this.y2=y2)});
     },
     Q(x1,y1,x,y) { 
         this.ctx.push({type:'C',x:(this.x=x),y:(this.y=y),
-                                x1:(this.x1=x1),y1:(this.y2=y1),
-                                x2:(this.x2=x1),y2:(this.y2=y2)});
+                                x1:(this.x1=x1),y1:(this.y1=y1),
+                                x2:(this.x2=x1),y2:(this.y2=y1)});
     },
     T(x,y) { 
         this.ctx.push({type:'C',x:(this.x=x),y:(this.y=y),
                                 x1:(this.x1+=2*(this.x-this.x1)),y1:(this.y1+=2*(this.y-this.y1)),
-                                x2:(this.x2=x1),y2:(this.y2=y2)});
+                                x2:(this.x1),y2:(this.y1)});
     },
     Z() { this.ctx.push({type:'L',x:(this.x=this.x0),y:(this.y=this.y0)}) },
     a(rx,ry,rot,fA,fS,x,y) { this.A(rx,ry,rot,fA,fS,this.x+x,this.y+y) },
@@ -78,16 +80,16 @@ parseSvgPathData.defaultIfc = {
     l(x,y) { this.L(this.x+x,this.y+y) },
     h(x) { this.H(this.x+x) },
     v(y) { this.V(this.y+y) },
-    c(x1,y1,x2,y2,x,y) { this.C(this.x1+x1,this.y1+y1,this.x2+x2,this.y2+y2,this.x+x,this.y+y) },
-    s(x2,y2,x,y) { this.S(this.x2+x2,this.y2+y2,this.x+x,this.y+y) },
-    q(x1,y1,x,y) { this.Q(this.x1+x1,this.y1+y1,this.x+x,this.y+y) },
+    c(x1,y1,x2,y2,x,y) { this.C(this.x+x1,this.y+y1,this.x+x2,this.y+y2,this.x+x,this.y+y) },
+    s(x2,y2,x,y) { this.S(this.x+x2,this.y+y2,this.x+x,this.y+y) },
+    q(x1,y1,x,y) { this.Q(this.x+x1,this.y+y1,this.x+x,this.y+y) },
     t(x,y) { this.T(this.x+x,this.y+y) },
     z() { this.Z() },
     x0:0,y0:0, x:0,y:0, x1:0,y1:0, x2:0,y2:0,
     ctx:[]
 };
 
-// direct to CanvasRenderingContext2D interface or to a Path2D object
+// direct to CanvasRenderingContext2D interface or to Path2D object
 parseSvgPathData.canvasIfc = {
     init(ctx) { 
         this.x=this.x0=this.x1=this.x2=this.y=this.y0=this.y1=this.y2 = 0;
@@ -125,7 +127,7 @@ parseSvgPathData.canvasIfc = {
         this.ctx.bezierCurveTo(this.x1=x1,this.y1=y1,this.x2=x2,this.y2=y2,this.x=x,this.y=y)
     },
     S(x2,y2,x,y) {
-        this.ctx.bezierCurveTo(this.x1=2*this.x-this.x1,this.y1=2*this.y-this.y1,
+        this.ctx.bezierCurveTo(this.x1=2*this.x-this.x2,this.y1=2*this.y-this.y2,
                                this.x2=x2,this.y2=y2,this.x=x,this.y=y)
     },
     Q(x1,y1,x,y) { 
@@ -141,12 +143,12 @@ parseSvgPathData.canvasIfc = {
     l(x,y) { this.L(this.x+x,this.y+y) },
     h(x) { this.H(this.x+x) },
     v(y) { this.V(this.y+y) },
-    c(x1,y1,x2,y2,x,y) { this.C(this.x1+x1,this.y1+y1,this.x2+x2,this.y2+y2,this.x+x,this.y+y) },
-    s(x2,y2,x,y) { this.S(this.x2+x2,this.y2+y2,this.x+x,this.y+y) },
-    q(x1,y1,x,y) { this.Q(this.x1+x1,this.y1+y1,this.x+x,this.y+y) },
+    c(x1,y1,x2,y2,x,y) { this.C(this.x+x1,this.y+y1,this.x+x2,this.y+y2,this.x+x,this.y+y) },
+    s(x2,y2,x,y) { this.S(this.x+x2,this.y+y2,this.x+x,this.y+y) },
+    q(x1,y1,x,y) { this.Q(this.x+x1,this.y+y1,this.x+x,this.y+y) },
     t(x,y) { this.T(this.x+x,this.y+y) },
     z() { this.Z() },
     // current point buffers (start, current, control)
     x0:0,y0:0, x:0,y:0, x1:0,y1:0, x2:0,y2:0,
-    ctx
+    ctx:false
 };

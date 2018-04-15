@@ -5,12 +5,11 @@
 <meta charset='utf-8'>
 </head>
 <body>
-<canvas id="c1" width="401" height="301" style="border:1px solid black"></canvas>
-<canvas id="c2" width="401" height="301" style="border:1px solid black"></canvas>
-<textarea id="txt" rows="10" cols="50" style="width:804px" oninput="render()">
- M230 230
- A 45 45, 0, 1, 1, 275 275
- L 275 230 Z
+<h3>Left: <i><code>native</code></i>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Right: <i><code>parseSvgPathData</code></i></h3>
+<canvas id="c1" width="301" height="301" style="background-color:antiquewhite; border:1px solid black"></canvas>
+<canvas id="c2" width="301" height="301" style="background-color:gainsboro; border:1px solid black"></canvas><br>
+<textarea id="txt" rows="5" cols="50" style="width:604px;background-color:palegoldenrod;border:1px solid black" oninput="render()">
+`M213.1,6.7c-32.4-14.4-73.7,0-88.1,30.6C110.6,4.9,67.5-9.5,36.9,6.7C2.8,22.9-13.4,62.4,13.5,110.9 C33.3,145.1,67.5,170.3,125,217c59.3-46.7,93.5-71.9,111.5-106.1C263.4,64.2,247.2,22.9,213.1,6.7z`
 </textarea>
 <script src="parseSvgPathData.js"></script>
 <script>
@@ -25,7 +24,6 @@
         ctx2.clearRect(0,0,ctx2.canvas.width,ctx2.canvas.height);
         ctx2.beginPath()
         ctx2.stroke(parseSvgPathData(d,parseSvgPathData.canvasIfc,new Path2D()));
-        console.log(JSON.stringify(parseSvgPathData(d)))
     }
 
     render();
