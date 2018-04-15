@@ -1,12 +1,11 @@
 [![License](http://img.shields.io/:license-mit-blue.svg)](https://github.com/goessner/parseSvgPathData/license.txt)
-[![npm](https://img.shields.io/npm/v/parseSvgPathData.svg)](https://www.npmjs.com/package/parseSvgPathData/)
-[![npm](https://img.shields.io/npm/dt/parseSvgPathData.svg)](https://www.npmjs.com/package/parseSvgPathData)
+[![npm](https://img.shields.io/npm/v/parse-svg-path-data.svg)](https://www.npmjs.com/package/parse-svg-path-data/)
+[![npm](https://img.shields.io/npm/dt/parse-svg-path-data.svg)](https://www.npmjs.com/package/parse-svg-path-data)
 [![no dependencies](https://img.shields.io/gemnasium/mathiasbynens/he.svg)](https://github.com/goessner/parseSvgPathData)
 
 # parseSvgPathData
 
 <code>parseSvgPathData</code> is a javascript micro function for parsing the [path data attribute](https://developer.mozilla.org/en-US/docs/Web/SVG/Attribute/d) of the [SVG `<path>` element](https://developer.mozilla.org/en-US/docs/Web/SVG/Element/path).
-Here is its definition:
 
 ```js
 function parseSvgPathData(data,[ifc],[ctx])
