@@ -1,0 +1,29 @@
+{
+  "name": "parseSvgPathData",
+  "version": "0.2.0",
+  "description": "A SVG Path Data Micro-Parser",
+  "keywords": [
+    "SVG",
+    "Pathdata",
+    "Parser",
+    "javascript",
+    "canvas"
+  ],
+  "main": "parseSvgPathData.js",
+  "scripts": {
+    "minify": "uglifyjs --comments -o ./parseSvgPathData.min.js ./parseSvgPathData.js",
+    "gzip": "7z -tgzip a ./parseSvgPathData.min.js.gz ./parseSvgPathData.min.js"
+  },
+  "author": "Stefan Goessner <fang03@web.de>",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/goessner/parseSvgPathData.git"
+  },
+  "license": "MIT",
+  "devDependencies": {
+    "concat": "^1.0.0",
+    "jsdoc-to-markdown": "^1.3.2",
+    "jslint": "^0.9.5",
+    "uglifyjs": "^2.4.10"
+  }
+}

@@ -1,0 +1,34 @@
+<!doctype html>
+<html>
+<head>
+<title>svg path data micro parser</title>
+<meta charset='utf-8'>
+</head>
+<body>
+<canvas id="c1" width="401" height="301" style="border:1px solid black"></canvas>
+<canvas id="c2" width="401" height="301" style="border:1px solid black"></canvas>
+<textarea id="txt" rows="10" cols="50" style="width:804px" oninput="render()">
+ M230 230
+ A 45 45, 0, 1, 1, 275 275
+ L 275 230 Z
+</textarea>
+<script src="parseSvgPathData.js"></script>
+<script>
+    const ctx1 = document.getElementById('c1').getContext('2d'),
+          ctx2 = document.getElementById('c2').getContext('2d'),
+          textarea = document.getElementById('txt')
+
+    function render() {
+        const d = textarea.value;
+        ctx1.clearRect(0,0,ctx1.canvas.width,ctx1.canvas.height);
+        ctx1.stroke(new Path2D(d));
+        ctx2.clearRect(0,0,ctx2.canvas.width,ctx2.canvas.height);
+        ctx2.beginPath()
+        ctx2.stroke(parseSvgPathData(d,parseSvgPathData.canvasIfc,new Path2D()));
+        console.log(JSON.stringify(parseSvgPathData(d)))
+    }
+
+    render();
+</script>
+</body>
+</html>
