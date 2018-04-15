@@ -1,7 +1,7 @@
 {
   "name": "parseSvgPathData",
   "version": "0.2.0",
-  "description": "A SVG Path Data Micro-Parser",
+  "description": "A SVG Path Data Micro-Parser using ",
   "keywords": [
     "SVG",
     "Pathdata",
