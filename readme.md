@@ -18,7 +18,7 @@ function parseSvgPathData(data,[ifc],[ctx])
 
 ![image](./parsesvgpathdata.gif)
 
-[Try it by yourself]()
+[Try it by yourself](https://goessner.github.io/parseSvgPathData/parsesvgpathdata.html)
 
 The fact that a user defined interface object should be supported, was considered a critical feature here. Similar libraries, which do not support this, are:
 
@@ -90,7 +90,11 @@ So parsing the path data `M37,17v15H14V17z M50,0H0v50h50z` using this interface 
 
 ### `canvasIfc`
 
-`canvasIfc` is another interface object, which is supplied with `parseSvgPathData`. Here every path command will invoke corresponding `HTML canvas 2D` methods. The following will render the path data in a given canvas element:
+`canvasIfc` is another interface object, which is supplied with `parseSvgPathData`. Here every path command will invoke corresponding `HTML canvas 2D` methods. 
+
+Please notice my paper [A Generalized Approach to Parameterizing Planar Elliptical Arcs](https://www.researchgate.net/publication/324498320_A_Generalized_Approach_to_Parameterizing_Planar_Elliptical_Arcs) in this context.
+
+The following will render the path data in a given canvas element:
 
 ```js
 const ctx = document.getElementById('canvas').getContext('2d')

@@ -18,7 +18,6 @@ function parseSvgPathData(data,ifc,ctx) {
                   z:{n:0} };
 
     const segment = (ifc,type,args) => {
-//console.log(args)
         if (type in seg) {
             if (args.length === seg[type].n) {
                 ifc[type](...args);
@@ -36,7 +35,7 @@ function parseSvgPathData(data,ifc,ctx) {
 
     if (!ifc) ifc = parseSvgPathData.defaultIfc;
     ifc.init(ctx);
-        // for each explicit named segment ...
+    // for each explicit named segment ...
     while (match = rex.exec(data)) {
         segment(ifc, match[1], match[2].replace(/^\s+|\s+$/g,'')  // trim whitespace at both ends (str.trim .. !)
                                        .replace(/(\d)\-/g,'$1 -') // insert blank between digit and '-'
